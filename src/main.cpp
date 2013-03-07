@@ -20,8 +20,8 @@ GLvoid keyboardSpecial(int key, int x, int y);
 GLvoid printGLInfo();
 GLvoid loadFile(const GLchar* filename, string& data);
 GLuint loadShader(string& source, GLenum shaderType);
-GLvoid initShader(const GLchar* vsFilename, const GLchar* fsFilename);
-GLvoid cleanShader();
+GLvoid initShaderProgram(const GLchar* vsFilename, const GLchar* fsFilename);
+GLvoid cleanShaderProgram();
 
 float angle = 0.0f;
 
@@ -60,7 +60,7 @@ GLvoid init(int* argc, char** argv){
 		printf("Glew error: %s\n", glewGetErrorString(error));
 		return;
 	}
-	initShader(vsFile, fsFile);
+	initShaderProgram(vsFile, fsFile);
 	
 	glutDisplayFunc(render);
 	glutReshapeFunc(reshape);
@@ -68,7 +68,6 @@ GLvoid init(int* argc, char** argv){
 	glutKeyboardFunc(keyboardNormal);
 	glutSpecialFunc(keyboardSpecial);
 	glutMainLoop();
-	cleanShader();
 }
 
 GLvoid render(){
@@ -161,38 +160,26 @@ GLvoid reshape(int width, int height){
 }
 
 GLvoid keyboardNormal(unsigned char key, int x, int y){
-	if (key == 27)
+	if (key == 27){
+		cleanShaderProgram();
 		exit(0);
+	}
 		
 	switch(key){
-		//P0
-		case 'w' : camera.update(0.1f, 0.0, 0.0f, 0.0f); break; //P0[1] += SCALE_SIZE; break;
-		case 'a' : camera.update(0.0f, -0.1f, 0.0f, 0.0f); break; //P0[0] -= SCALE_SIZE; break;
-		case 's' : camera.update(-0.1f, 0.0f, 0.0f, 0.0f); break; //P0[1] -= SCALE_SIZE; break;
-		case 'd' : camera.update(0.0f, 0.1f, 0.0f, 0.0f); break; //P0[0] += SCALE_SIZE; break;
-		
-		//P1
-		case 't' : P1[1] += SCALE_SIZE; break;
-		case 'f' : P1[0] -= SCALE_SIZE; break;
-		case 'g' : P1[1] -= SCALE_SIZE; break;
-		case 'h' : P1[0] += SCALE_SIZE; break;
-		
-		//P2
-		case 'i' : P2[1] += SCALE_SIZE; break;
-		case 'j' : P2[0] -= SCALE_SIZE; break;
-		case 'k' : P2[1] -= SCALE_SIZE; break;
-		case 'l' : P2[0] += SCALE_SIZE; break;
+		case 'w' : camera.update(0.1f, 0.0, 0.0f, 0.0f); break;
+		case 'a' : camera.update(0.0f, -0.1f, 0.0f, 0.0f); break;
+		case 's' : camera.update(-0.1f, 0.0f, 0.0f, 0.0f); break;
+		case 'd' : camera.update(0.0f, 0.1f, 0.0f, 0.0f); break;
 	}	
 	
 }
 
 GLvoid keyboardSpecial(int key, int x, int y){
 	switch(key){
-		//P3
-		case GLUT_KEY_UP : camera.update(0.0f, 0.0f, 5.0f, 0.0f); break; //P3[1] += SCALE_SIZE; break;
-		case GLUT_KEY_LEFT : camera.update(0.0f, 0.0f, 0.0f, -5.0f); break; //P3[0] -= SCALE_SIZE; break;
-		case GLUT_KEY_DOWN : camera.update(0.0f, 0.0f, -5.0f, 0.0f); break; //P3[1] -= SCALE_SIZE; break;
-		case GLUT_KEY_RIGHT : camera.update(0.0f, 0.0f, 0.0f, 5.0f); break; //P3[0] += SCALE_SIZE; break;
+		case GLUT_KEY_UP : camera.update(0.0f, 0.0f, 5.0f, 0.0f); break;
+		case GLUT_KEY_LEFT : camera.update(0.0f, 0.0f, 0.0f, -5.0f); break;
+		case GLUT_KEY_DOWN : camera.update(0.0f, 0.0f, -5.0f, 0.0f); break;
+		case GLUT_KEY_RIGHT : camera.update(0.0f, 0.0f, 0.0f, 5.0f); break;
 	}
 }
 
@@ -240,7 +227,7 @@ GLuint loadShader(string& source, GLenum shaderType){
 	return shaderID;
 }
 
-GLvoid initShader(const GLchar* vsFilename, const GLchar* fsFilename){
+GLvoid initShaderProgram(const GLchar* vsFilename, const GLchar* fsFilename){
 	string source;
 	loadFile(vsFilename, source);
 	vs = loadShader(source, GL_VERTEX_SHADER);
@@ -256,7 +243,7 @@ GLvoid initShader(const GLchar* vsFilename, const GLchar* fsFilename){
 	glUseProgram(shaderProgramID);
 }
 
-GLvoid cleanShader(){
+GLvoid cleanShaderProgram(){
 	glDetachShader(shaderProgramID, vs);
 	glDetachShader(shaderProgramID, fs);
 	

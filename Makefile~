@@ -48,7 +48,3 @@ git-remote-add:
 git-push:
 		git push origin master
 		
-.PHONY: git-push-u
-git-push:
-		git push -u origin master
-		
