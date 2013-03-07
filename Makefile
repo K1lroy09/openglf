@@ -36,15 +36,15 @@ install:
 	sudo sh install.sh
 	
 #Git specific additions
-.PHONY git-init
+.PHONY: git-init
 git-init:
 		git init
 
-.PHONY git-remote-add
+.PHONY: git-remote-add
 git-remote-add:
 		git remote add origin https://github.com/Arn3/openglf.git
 
-.PHONY git-push
+.PHONY: git-push
 git-push:
 		git push origin master
 		
