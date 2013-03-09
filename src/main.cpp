@@ -82,67 +82,8 @@ GLvoid render(){
 	glLineWidth(5.0f);
 	glTranslatef(0.0f, 0.0f, -5.0f);
 	glColor3f(1.0f, 0.5f, 0.3f);
-	glutWireTeapot(1.0f);
+	glutSolidTeapot(1.0f);
 	glEnable(GL_DEPTH_TEST);
-	glBegin(GL_QUADS);
-		glColor3f(1.0f, 0.0f, 0.0f);
-		glVertex3f(-10.0f, -10.0f, -10.0f);
-		glVertex3f(-10.0f, -10.0f, 10.0f);
-		glVertex3f(10.0f, -10.0f, 10.0f);
-		glVertex3f(10.0f, -10.0f, -10.0f);
-		
-		glColor3f(0.0f, 1.0f, 0.0f);
-		glVertex3f(10.0f, 10.0f, 10.0f);
-		glVertex3f(10.0f, 10.0f, -10.0f);
-		glVertex3f(10.0f, -10.0f, -10.0f);
-		glVertex3f(10.0f, -10.0f, 10.0f);
-		
-		glColor3f(0.0f, 0.0f, 1.0f);
-		glVertex3f(-10.0f, 10.0f, -10.0f);
-		glVertex3f(10.0f, 10.0f, -10.0f);
-		glVertex3f(10.0f, -10.0f, -10.0f);
-		glVertex3f(-10.0f, -10.0f, -10.0f);
-		
-		glColor3f(0.0f, 1.0f, 10.0f);
-		glVertex3f(-10.0f, 10.0f, 10.0f);
-		glVertex3f(-10.0f, 10.0f, -10.0f);
-		glVertex3f(-10.0f, -10.0f, -10.0f);
-		glVertex3f(-10.0f, -10.0f, 10.0f);
-	glEnd();
-	/*glBegin(GL_LINES);
-		glColor3f(1.0f, 0.0f, 0.0f);
-		glVertex2f(P0[0], P0[1]);
-		glVertex2f(P1[0], P1[1]);
-		
-		glColor3f(0.0f, 1.0f, 0.0f);
-		glVertex2f(P1[0], P1[1]);
-		glVertex2f(P2[0], P2[1]);
-		
-		glColor3f(0.0f, 0.0f, 1.0f);
-		glVertex2f(P2[0], P2[1]);
-		glVertex2f(P3[0], P3[1]);
-		
-		float t = 0.0f;
-		float bXt_1 = (float)(pow((1-t),3)*P0[0] + 3*pow((1-t),2)*t*P1[0] + 3*(1-t)*pow(t,2)*P2[0] * pow(t,3)*P3[0]);
-		float bYt_1 = (float)(pow((1-t),3)*P0[1] + 3*pow((1-t),2)*t*P1[1] + 3*(1-t)*pow(t,2)*P2[1] * pow(t,3)*P3[1]);
-		
-		for(t += SAMPLE_SIZE; ; t += SAMPLE_SIZE){
-			float bXt = (float)(pow((1-t),3)*P0[0] + 3*pow((1-t),2)*t*P1[0] + 3*(1-t)*pow(t,2)*P2[0] + pow(t,3)*P3[0]);
-			float bYt = (float)(pow((1-t),3)*P0[1] + 3*pow((1-t),2)*t*P1[1] + 3*(1-t)*pow(t,2)*P2[1] + pow(t,3)*P3[1]);	
-			
-			glColor3f(1.0f, 0.0f, 1.0f);
-			glVertex2f(bXt_1, bYt_1);
-			glVertex2f(bXt, bYt);
-		
-			bXt_1 = bXt;
-			bYt_1 = bYt;
-			
-			if((int)t == 1){
-				break;
-			}
-		}
-		
-	glEnd();*/
 	
 	//angle += 0.5f;
 	glutSwapBuffers();
