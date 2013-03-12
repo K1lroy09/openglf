@@ -5,6 +5,8 @@
 #include <iomanip>
 #include <math.h>
 
+#include <GL/glut.h>
+
 #define _USE_MATH_DEFINES
 
 using namespace std;
@@ -104,6 +106,24 @@ class Camera{
 			this->lookAt[0] = this->pos[0] + viewVector[0];
 			this->lookAt[1] = this->pos[1] + viewVector[1];
 			this->lookAt[2] = this->pos[2] + viewVector[2];
+		}
+		
+		void processKeys(int key, int x, int y){
+				switch(key){
+					case 'w' : this->update(0.1f, 0.0, 0.0f, 0.0f); break;
+					case 'a' : this->update(0.0f, -0.1f, 0.0f, 0.0f); break;
+					case 's' : this->update(-0.1f, 0.0f, 0.0f, 0.0f); break;
+					case 'd' : this->update(0.0f, 0.1f, 0.0f, 0.0f); break;
+				}		
+		}
+		
+		void processSpecialKeys(unsigned char key, int x, int y){
+				switch(key){
+					case GLUT_KEY_UP : this->update(0.0f, 0.0f, 5.0f, 0.0f); break;
+					case GLUT_KEY_LEFT : this->update(0.0f, 0.0f, 0.0f, -5.0f); break;
+					case GLUT_KEY_DOWN : this->update(0.0f, 0.0f, -5.0f, 0.0f); break;
+					case GLUT_KEY_RIGHT : this->update(0.0f, 0.0f, 0.0f, 5.0f); break;
+				}	
 		}
 		
 		friend ostream& operator << (std::ostream& out, const Camera& camera){
