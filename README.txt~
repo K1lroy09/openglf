@@ -34,11 +34,6 @@ Files:
 		- install.sh //Does the OpenGL installation
 		- Makefile
 		- README.txt
-Controls:
-		- W, A, S, D
-		- Onclick (Mouse button left) -> capture camera
-		- Onclick (Mouse button right) -> uncapture camera
-		- Mouse movement -> Tilt 
 Credits: Arne Schreuder | arn3@arn3.com
 Known bugs: N/A
 Change log: N/A
