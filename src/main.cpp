@@ -8,6 +8,7 @@
 #include <GL/glut.h>
 
 #include "Camera.h"
+#include "FPS.h"
 
 using namespace std;
 
@@ -17,9 +18,12 @@ using namespace std;
 GLvoid printGLInfo();
 GLvoid init(int* argc, char** argv);
 GLvoid render();
+GLvoid idle();
 GLvoid reshape(int width, int height);
-GLvoid keyboardNormal(unsigned char key, int x, int y);
-GLvoid keyboardSpecial(int key, int x, int y);
+GLvoid keyboardNormalPressed(unsigned char key, int x, int y);
+GLvoid keyboardNormalReleased(unsigned char key, int x, int y);
+GLvoid mousePress(int button, int state, int x, int y);
+GLvoid mousePassiveMotion(int x, int y);
 
 ///////////////////////////////////////////////////////////////////////////////
 // SHADER RELATED FUNCTIONS
@@ -59,7 +63,7 @@ GLfloat normals[] = {
 GLuint indices[] = {0, 1, 2, 0, 2, 3};
 
 Camera camera;
-
+FPS fps;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -112,18 +116,25 @@ GLvoid init(int* argc, char** argv){
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(normals), normals, GL_STATIC_DRAW);
 	
+	fps.start();
+	
 	//Callbacks
 	glutDisplayFunc(render);
 	glutReshapeFunc(reshape);
-	glutIdleFunc(render);
-	glutKeyboardFunc(keyboardNormal);
-	glutSpecialFunc(keyboardSpecial);
+	glutIdleFunc(idle);
+	glutKeyboardFunc(keyboardNormalPressed);
+	glutKeyboardUpFunc(keyboardNormalReleased);
+	glutMouseFunc(mousePress);
+	glutPassiveMotionFunc(mousePassiveMotion);
 	
 	//Mainloop
 	glutMainLoop();
 }
 
 GLvoid render(){
+	fps.measure();
+	camera.recalculate();
+	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	gluLookAt(
@@ -154,6 +165,19 @@ GLvoid render(){
 	glDisable(GL_DEPTH_TEST);
 	
 	glutSwapBuffers();
+	
+	fps.setLastFrameNow();
+	
+	if(fps.timeToPrintFPS()){
+		//cout << fps;
+		fps.setLastPrintNow();
+	}
+}
+
+GLvoid idle(){
+	if(fps.capFPS()){
+		glutPostRedisplay();
+	}
 }
 
 GLvoid reshape(int width, int height){
@@ -167,19 +191,48 @@ GLvoid reshape(int width, int height){
 	glMatrixMode(GL_MODELVIEW);		
 }
 
-GLvoid keyboardNormal(unsigned char key, int x, int y){
+GLvoid keyboardNormalPressed(unsigned char key, int x, int y){
 	if (key == 27){
 		cleanShaderProgram();
 		exit(0);
 	}
 	
-	camera.processKeys(key, x, y);
-	
+	camera.processKeysPressed(key, x, y);	
 }
 
-GLvoid keyboardSpecial(int key, int x, int y){
-	camera.processSpecialKeys(key, x, y);
+GLvoid keyboardNormalReleased(unsigned char key, int x, int y){
+	if (key == 27){
+		cleanShaderProgram();
+		exit(0);
+	}
+	
+	camera.processKeysReleased(key, x, y);	
 }
+
+GLvoid mousePress(int button, int state, int x, int y){
+	if(!camera.isCaptured()){
+		if (button == GLUT_LEFT_BUTTON ){
+			camera.capture();
+		}
+	}
+	else{
+		if (button == GLUT_RIGHT_BUTTON ){
+			camera.uncapture();
+		}
+	}
+}
+
+GLvoid mousePassiveMotion(int x, int y){
+	if(camera.isCaptured()){
+		camera.grabMousePosition(x, y);	
+	}
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// SHADER RELATED FUNCTIONS
+///////////////////////////////////////////////////////////////////////////////
 
 GLvoid loadFile(const GLchar* filename, string& data){
 	printf("Loading file (%s) => ", filename);
@@ -198,11 +251,6 @@ GLvoid loadFile(const GLchar* filename, string& data){
 	printf("DONE\n");
 }
 
-
-
-///////////////////////////////////////////////////////////////////////////////
-// SHADER RELATED FUNCTIONS
-///////////////////////////////////////////////////////////////////////////////
 
 GLvoid processCompilationState(int shaderID){
 		
